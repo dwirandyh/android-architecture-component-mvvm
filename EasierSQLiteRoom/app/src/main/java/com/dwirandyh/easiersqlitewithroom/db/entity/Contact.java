@@ -4,34 +4,35 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
 @Entity(tableName = "contacts")
 public class Contact {
 
-    @ColumnInfo(name = "contact_name")
+
+    @ColumnInfo(name="contact_name")
     private String name;
 
-    @ColumnInfo(name = "contact_email")
+    @ColumnInfo(name="contact_email")
     private String email;
 
-    @ColumnInfo(name = "contact_id")
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
+    @ColumnInfo(name="contact_id")
+    @PrimaryKey(autoGenerate =true)
+    private long id;
 
-    /*
-    Ignore annotation to tell room to not use this constructor and use other constructor
-     */
+
     @Ignore
-    public Contact(){
-
+    public Contact() {
     }
 
-    public Contact(long id, String name, String email){
+
+
+    public Contact(long id, String name, String email) {
+
         this.name = name;
         this.email = email;
         this.id = id;
     }
+
 
     public String getName() {
         return name;
@@ -49,11 +50,11 @@ public class Contact {
         this.email = email;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 }
