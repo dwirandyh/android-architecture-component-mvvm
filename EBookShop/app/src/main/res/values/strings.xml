@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EBookShop</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="submit_button">Submit</string>
+    <string name="book_name">Book Name</string>
+    <string name="unit_price">Unit Price</string>
+</resources>
