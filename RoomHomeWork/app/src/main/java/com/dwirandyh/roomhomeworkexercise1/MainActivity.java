@@ -1,7 +1,9 @@
 package com.dwirandyh.roomhomeworkexercise1;
 
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +19,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.dwirandyh.roomhomeworkexercise1.databinding.ActivityMainBinding;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,14 +33,22 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Student> students;
     private StudentDataAdapter studentDataAdapter;
 
+    private ActivityMainBinding activityMainBinding;
+    private MainActivityClickHandlers clickHandlers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        clickHandlers = new MainActivityClickHandlers(this);
+        activityMainBinding.setClickHanlder(clickHandlers);
+
+        Toolbar toolbar = activityMainBinding.toolbar;
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = findViewById(R.id.rvStudents);
+        RecyclerView recyclerView = activityMainBinding.layoutContainer.rvStudents;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -62,22 +74,39 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddNewStudentActivity.class);
-                startActivityForResult(intent, NEW_STUDENT_ACTIVITY_REQUEST_CODE);
-            }
-        });
+
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
     }
+
+    public class MainActivityClickHandlers {
+        Context context;
+
+        public MainActivityClickHandlers(Context context) {
+            this.context = context;
+        }
+
+        public void onFABClicked(View view) {
+            Intent intent = new Intent(MainActivity.this, AddNewStudentActivity.class);
+            startActivityForResult(intent, NEW_STUDENT_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_STUDENT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Student student = (Student) data.getSerializableExtra("STUDENT");
+            Student student = new Student();
+            student.setName(data.getStringExtra("NAME"));
+            student.setEmail(data.getStringExtra("EMAIL"));
+            student.setCountry(data.getStringExtra("COUNTRY"));
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM YYYY");
             String currentDate = simpleDateFormat.format(new Date());
