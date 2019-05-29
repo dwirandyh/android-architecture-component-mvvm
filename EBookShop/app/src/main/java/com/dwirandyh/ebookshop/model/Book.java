@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import com.dwirandyh.ebookshop.BR;
 
 import java.util.List;
+import java.util.Objects;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -90,6 +91,20 @@ public class Book extends BaseObservable {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        Book book = (Book) o;
+        return getBookId() == book.getBookId() &&
+                getUnitPrice() == book.getUnitPrice() &&
+                getCategoryId() == book.getCategoryId() &&
+                getBookName().equals(book.getBookName());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBookId(), getBookName(), getUnitPrice(), getCategoryId());
+    }
 }
 
