@@ -1,6 +1,10 @@
 package com.dwirandyh.tmdbclient.view;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +17,15 @@ import android.widget.Toast;
 
 import com.dwirandyh.tmdbclient.R;
 import com.dwirandyh.tmdbclient.adapter.MovieAdapter;
+import com.dwirandyh.tmdbclient.databinding.ActivityMainBinding;
 import com.dwirandyh.tmdbclient.model.Movie;
 import com.dwirandyh.tmdbclient.model.MovieDBResponse;
 import com.dwirandyh.tmdbclient.service.MoviewDataService;
 import com.dwirandyh.tmdbclient.service.RetrofitInstance;
+import com.dwirandyh.tmdbclient.viewmodel.MainActivityViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private MainActivityViewModel mainActivityViewModel;
+    private ActivityMainBinding activityMainBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("TMDB Popular Moviews Today");
 
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
+
         getPopularMoviews();
 
-        swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        swipeRefreshLayout = activityMainBinding.swiperefresh;
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -52,30 +67,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPopularMoviews() {
-        MoviewDataService moviewDataService = RetrofitInstance.getService();
-        Call<MovieDBResponse> call = moviewDataService.getPopularMovies(this.getString(R.string.api_key));
-        call.enqueue(new Callback<MovieDBResponse>() {
+        mainActivityViewModel.getAllMovies().observe(this, new Observer<List<Movie>>() {
             @Override
-            public void onResponse(Call<MovieDBResponse> call, Response<MovieDBResponse> response) {
-                MovieDBResponse movieDBResponse = response.body();
-
-                if (movieDBResponse != null && movieDBResponse.getMovies() != null){
-                    movies = (ArrayList<Movie>) response.body().getMovies();
-                    showOnRecyclerView();
-
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieDBResponse> call, Throwable t) {
-
+            public void onChanged(@Nullable List<Movie> moviesLiveData) {
+                movies = (ArrayList<Movie>) moviesLiveData;
+                showOnRecyclerView();
             }
         });
     }
 
     private void showOnRecyclerView(){
-        recyclerView = findViewById(R.id.rvMovies);
+        recyclerView = activityMainBinding.rvMovies;
         movieAdapter = new MovieAdapter(this, movies);
 
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
