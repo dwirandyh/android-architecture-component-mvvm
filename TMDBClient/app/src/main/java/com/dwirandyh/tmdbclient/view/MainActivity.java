@@ -11,26 +11,15 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.dwirandyh.tmdbclient.R;
 import com.dwirandyh.tmdbclient.adapter.MovieAdapter;
 import com.dwirandyh.tmdbclient.databinding.ActivityMainBinding;
 import com.dwirandyh.tmdbclient.model.Movie;
-import com.dwirandyh.tmdbclient.model.MovieDBResponse;
-import com.dwirandyh.tmdbclient.service.MoviewDataService;
-import com.dwirandyh.tmdbclient.service.RetrofitInstance;
 import com.dwirandyh.tmdbclient.viewmodel.MainActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -2,12 +2,11 @@ package com.dwirandyh.tmdbclient.repository;
 
 import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 
 import com.dwirandyh.tmdbclient.R;
 import com.dwirandyh.tmdbclient.model.Movie;
 import com.dwirandyh.tmdbclient.model.MovieDBResponse;
-import com.dwirandyh.tmdbclient.service.MoviewDataService;
+import com.dwirandyh.tmdbclient.service.MovieDataService;
 import com.dwirandyh.tmdbclient.service.RetrofitInstance;
 
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ public class MovieRepository {
     }
 
     public MutableLiveData<List<Movie>> getMutableLiveData(){
-        MoviewDataService moviewDataService = RetrofitInstance.getService();
-        Call<MovieDBResponse> call = moviewDataService.getPopularMovies(application.getString(R.string.api_key));
+        MovieDataService movieDataService = RetrofitInstance.getService();
+        Call<MovieDBResponse> call = movieDataService.getPopularMovies(application.getString(R.string.api_key));
 
         call.enqueue(new Callback<MovieDBResponse>() {
             @Override
