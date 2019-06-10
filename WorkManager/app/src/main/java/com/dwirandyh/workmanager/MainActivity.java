@@ -5,11 +5,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.work.Constraints;
+import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
@@ -19,6 +21,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String KEY_COUNT_VALUE = "key_count_value";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +30,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Data data = new Data.Builder()
+                .putInt(KEY_COUNT_VALUE, 1750)
+                .build();
+
         Constraints constraints =new Constraints.Builder()
                 .setRequiresCharging(true)
                 .build();
 
         final OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(DemoWorker.class)
                 .setConstraints(constraints)
+                .setInputData(data)
                 .build();
 
         final TextView textView = findViewById(R.id.textView);
@@ -50,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onChanged(WorkInfo workInfo) {
                         if (workInfo != null){
                             textView.setText(workInfo.getState().name());
+
+                            if (workInfo.getState().isFinished()){
+                                Data data1 =workInfo.getOutputData();
+                                String message = data1.getString(DemoWorker.KEY_WORKER);
+                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });

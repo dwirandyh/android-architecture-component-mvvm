@@ -4,11 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 public class DemoWorker extends Worker {
 
+    public static final String KEY_WORKER = "key_worker";
 
     public DemoWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -19,12 +21,19 @@ public class DemoWorker extends Worker {
     public Result doWork() {
         try{
 
-            for (int i = 0; i < 100000; i++){
+            Data data = getInputData();
+            int countLimit = data.getInt(MainActivity.KEY_COUNT_VALUE, 0);
+
+            for (int i = 0; i < countLimit; i++){
                 Log.i("MYTAG", "count is " + i);
             }
 
+            Data dataToActivity = new Data.Builder()
+                    .putString(KEY_WORKER, "Task Done Successfully")
+                    .build();
 
-            return Result.success();
+
+            return Result.success(dataToActivity);
         }catch (Exception e){
             Log.e("DemoWorker", e.getMessage());
             return Result.failure();
