@@ -2,6 +2,8 @@ package com.dwirandyh.dependencyinjection;
 
 import android.util.Log;
 
+import javax.inject.Inject;
+
 public class SmartPhone {
 
     private Battery battery;
@@ -9,6 +11,7 @@ public class SmartPhone {
     private SIMCard simCard;
     private static final String TAG = "SmartPhone";
 
+    @Inject
     public SmartPhone(Battery battery, MemoryCard memoryCard, SIMCard simCard){
         this.battery = battery;
         this.memoryCard = memoryCard;

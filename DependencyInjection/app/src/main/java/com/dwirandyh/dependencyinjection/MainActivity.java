@@ -5,18 +5,24 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+    SmartPhone smartPhone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Battery battery = new Battery();
-        MemoryCard memoryCard = new MemoryCard();
+//        Battery battery = new Battery();
+//        MemoryCard memoryCard = new MemoryCard();
+//
+//        ServiceProvider serviceProvider = new ServiceProvider();
+//        SIMCard simCard = new SIMCard(serviceProvider);
+//
+//        SmartPhone smartPhone = new SmartPhone(battery, memoryCard, simCard);
 
-        ServiceProvider serviceProvider = new ServiceProvider();
-        SIMCard simCard = new SIMCard(serviceProvider);
+        SmartPhoneComponent smartPhoneComponent = DaggerSmartPhoneComponent.create();
 
-        SmartPhone smartPhone = new SmartPhone(battery, memoryCard, simCard);
+        smartPhone = smartPhoneComponent.getSmartPhone();
 
         smartPhone.makeACall();
     }
