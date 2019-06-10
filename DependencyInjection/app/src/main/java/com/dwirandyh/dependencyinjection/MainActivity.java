@@ -3,8 +3,11 @@ package com.dwirandyh.dependencyinjection;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity {
 
+    @Inject
     SmartPhone smartPhone;
 
     @Override
@@ -22,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
         SmartPhoneComponent smartPhoneComponent = DaggerSmartPhoneComponent.create();
 
-        smartPhone = smartPhoneComponent.getSmartPhone();
+//        smartPhone = smartPhoneComponent.getSmartPhone();
+        smartPhoneComponent.inject(this);
 
         smartPhone.makeACall();
     }
